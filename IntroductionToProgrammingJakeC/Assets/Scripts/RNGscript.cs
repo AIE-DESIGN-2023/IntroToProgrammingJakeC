@@ -1,20 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class RNGscript : MonoBehaviour
 {
+    //Random number variables
     public int randomNumber;
+    public int randomNumberMin;
+    public int randomNumberMax;
+
+    //Text box variables
     public TMP_Text textBox;
+
     public TMP_InputField inputField;
+    public GameObject restartButton;
 
     // Start is called before the first frame update
     void Start()
     {
         //Assiging a random number between 1-100 to randomNumber variable
-        randomNumber = Random.Range(1, 101);
-
+        Restart();
     }
 
     // Update is called once per frame
@@ -44,6 +53,8 @@ public class RNGscript : MonoBehaviour
             {
                 //Means the player got the number right
                 textBox.text = "Correct!";
+                //Turn on restartButton
+                restartButton.SetActive(true);
             }
             else if (playerNumber < randomNumber)
             {
@@ -53,7 +64,7 @@ public class RNGscript : MonoBehaviour
             }
             else if (playerNumber == 69)
             {
-                textBox.text = "Nice :^)";
+                textBox.text = "Grow up";
             }
 
             else
@@ -61,8 +72,26 @@ public class RNGscript : MonoBehaviour
                 //Means the player number is more than
                 textBox.text = "Your guess is high...";
             }
-
+            
         }
+        inputField.text = "";
+        inputField.ActivateInputField();
+        
+        
+
+
+    }
+    //Function to restart scene
+    public void Restart()
+    {
+        //SceneManager.LoadScene(0);
+
+        //Reset everything in the scene
+        textBox.text = "Guess a number between " + randomNumberMin.ToString() + " and " + (randomNumberMax -1).ToString();
+        restartButton.SetActive(false);
+        inputField.text = "";
+        randomNumber = Random.Range(randomNumberMin, randomNumberMax);
+        inputField.Select();
 
 
     }
