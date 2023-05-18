@@ -19,6 +19,11 @@ public class RNGscript : MonoBehaviour
     public TMP_InputField inputField;
     public GameObject restartButton;
 
+    //Guesses variables
+    public int maxGuesses;
+    private int remainingGuesses;
+    public TMP_Text guessesText;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,13 +45,15 @@ public class RNGscript : MonoBehaviour
 
         //Check that input field has a number
 
-        if (inputField.text != "")
+        if (inputField.text != "" && remainingGuesses > 0)
         {
 
 
 
             //assign input value to temporary variable
             int playerNumber = int.Parse(inputField.text);
+            
+         
 
             //check player value againt random number using if statements
             if (playerNumber == randomNumber)
@@ -61,6 +68,10 @@ public class RNGscript : MonoBehaviour
                 //Means the player number is less than
                 textBox.text = "Your guess is low...";
 
+                //Remove 1 from current guesses and update the text
+                remainingGuesses--;
+                guessesText.text = "Guesses Remaining = " + remainingGuesses.ToString();
+
             }
             else if (playerNumber == 69)
             {
@@ -71,13 +82,28 @@ public class RNGscript : MonoBehaviour
             {
                 //Means the player number is more than
                 textBox.text = "Your guess is high...";
+
+                //Remove 1 from current guesses and update the text
+                remainingGuesses--;
+                guessesText.text = "Guesses Remaining = " + remainingGuesses.ToString();
             }
             
         }
+
+
+        if (remainingGuesses == 0)
+        {
+            textBox.text = "You Died";
+            textBox.color = Color.red;
+            restartButton.SetActive(true);
+            inputField.gameObject.SetActive(false);
+            restartButton.GetComponent<Button>().Select();
+
+        }
+
         inputField.text = "";
         inputField.ActivateInputField();
-        
-        
+
 
 
     }
@@ -88,11 +114,15 @@ public class RNGscript : MonoBehaviour
 
         //Reset everything in the scene
         textBox.text = "Guess a number between " + randomNumberMin.ToString() + " and " + (randomNumberMax -1).ToString();
+        textBox.color = Color.black;
         restartButton.SetActive(false);
         inputField.text = "";
         randomNumber = Random.Range(randomNumberMin, randomNumberMax);
         inputField.Select();
+        inputField.gameObject.SetActive(true);
 
-
+        //Reset guesses text and guesses remaining value
+        remainingGuesses = maxGuesses;
+        guessesText.text = "Guesses Remaining = " + remainingGuesses.ToString();
     }
 }
